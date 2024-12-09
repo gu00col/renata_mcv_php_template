@@ -1,7 +1,7 @@
 <?php
 
 namespace MF\Controller;
-
+require_once('./logs.php');
 abstract class Action
 {
 
@@ -20,7 +20,6 @@ abstract class Action
 
     }
     protected function content(){
-
         $classPath = get_class($this);
         $classPathEdit = strtolower(str_replace('Controller', '', str_replace('App\\Controllers\\', '', $classPath)));
         $viewPath = './App/Views/' . $classPathEdit . '/' . $this->view->page . '.phtml';

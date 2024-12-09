@@ -1,26 +1,35 @@
 <?php 
 
 namespace MF\Init;
+require_once('./logs.php');
 
 
-
-function formatPathName($path)
+function getDynamicPath($projectName)
 {
-    //echo 'Iniciando formatPathName <br>';
+    // Obtém o caminho da aplicação
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-    // Obtém o diretório pai três níveis acima do diretório atual
-    $greatGrandParentDirName = basename(dirname(dirname(dirname(__DIR__))));
+    // Remove a barra inicial, se existir, para evitar um elemento vazio no array
+    if (substr($path, 0, 1) === '/') {
+        $path = substr($path, 1);
+    }
 
-    //echo 'greatGrandParentDirName: ' . $greatGrandParentDirName . ' <br>';
+    // Divide o caminho em um array usando o caractere '/'
+    $pathArray = explode('/', $path);
+    // Encontra a posição da pasta do projeto
+    $projectKey = array_search($projectName, $pathArray);
 
-    // Remove a substring correspondente ao nome do diretório pai três níveis acima
-    $substring = '/' . $greatGrandParentDirName;
-    $pathFormat = str_replace($substring, '', $path);
-
-    //echo 'pathFormat: ' . $pathFormat . ' <br>';
-    return $pathFormat;
+    // Se a pasta do projeto for encontrada, cria o novo caminho a partir dela
+    if ($projectKey !== false) {
+        $dynamicPathArray = array_slice($pathArray, $projectKey + 1);
+        $dynamicPath = '/' . implode('/', $dynamicPathArray);
+    } else {
+        // Se a pasta do projeto não for encontrada, retorna o caminho original
+        $dynamicPath = $path;
+    }
+    //logMessage('$dynamicPath: '.$dynamicPath);
+    return $dynamicPath;
 }
-
 
 
 
@@ -29,12 +38,13 @@ function formatPathName($path)
 abstract class Bootstrap { 
 
     private $routes;
+    protected $projectName;
 
     abstract protected function initRoute();
 
-    public function __construct()
+    public function __construct($projectName)
     {
-        //echo 'Iniciando Route <br>';
+        $this->projectName = $projectName;
         $this->initRoute();
         $this->run($this->getUrl());
     }
@@ -53,10 +63,12 @@ abstract class Bootstrap {
     protected function run($url)
     {
         foreach ($this->getRoutes() as $index => $route) {
+
             //echo $url . ':' . $route['route'] . '<br>';
             if ($url == $route['route']) {
                 //echo 'Estou na rota '.$route['route']. '<br>';
                 //echo ucfirst($route['controller']);
+                $rota = ucfirst($route['controller']);
                 $class = 'App\\Controllers\\' . ucfirst($route['controller']);
                 //echo 'Carregando o controller '. $class . '<br>';
                 $controller = new $class;
@@ -67,8 +79,7 @@ abstract class Bootstrap {
     }
     protected function getUrl()
     {
-        //echo 'Iniciando getUrl <br>';
-        return formatPathName(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        return getDynamicPath($this->projectName);
     }
 
 }

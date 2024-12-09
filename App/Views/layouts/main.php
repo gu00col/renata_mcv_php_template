@@ -1,4 +1,5 @@
 <?php
+
 function includeFileWithVariables($filePath, $variables = array(), $print = true)
 {
     $output = NULL;
