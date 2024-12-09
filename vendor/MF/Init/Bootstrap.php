@@ -74,6 +74,11 @@ abstract class Bootstrap {
                 $controller = new $class;
                 $action = $route['action'];
                 $controller->$action();
+            }else{
+                $class = 'App\\Controllers\\NotFoundController';
+                $controller = new $class;
+                $action = $route['action'];
+                $controller->$action();
             }
         }
     }

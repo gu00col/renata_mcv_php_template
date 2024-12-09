@@ -19,6 +19,11 @@ class Route extends Bootstrap
             'controller' => 'IndexController',
             'action' => 'index'
         );
+        $routes['notFound'] = array(
+            'route' => '404',
+            'controller' => 'NotFoundController',
+            'action' => 'index'
+        );
         $this->setRoutes($routes);
     }
 }
