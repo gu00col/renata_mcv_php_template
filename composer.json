@@ -1,0 +1,19 @@
+{
+    "name": "renata/projeto",
+    "description": "gestao_projoetos",
+    "type": "project",
+    "require": {
+        "php": "^8.2"
+    },
+    "authors": [
+        {
+            "name": "luis"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/",
+            "MF\\": "vendor/MF/"
+        }
+    }
+}
