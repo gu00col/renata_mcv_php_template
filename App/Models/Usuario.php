@@ -1,12 +1,9 @@
 <?php 
 namespace App\Models;
 
-class Usuario {
-    protected $db;
-    
-    public function __construct(\PDO $db){
-        $this->db = $db;
-    }
+use MF\Model\Model;
+
+class Usuario  extends Model{
 
     public function getUsuarios(){
         $stm = $this->db->prepare("SELECT * FROM usuarios");
