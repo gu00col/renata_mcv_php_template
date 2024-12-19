@@ -7,13 +7,20 @@ error_reporting(E_ALL);
 require_once('./logs.php');
 
 use MF\Controller\Action;
+use MF\Model\Container;
 
+use App\Models\Usuario;
 
 class IndexController extends Action
 {
     
     public function index() {
-        $this->view->dados = 'alow';
+
+        // $usuario = Container::getModel('Usuario');
+        
+        // $usuarios = $usuario->getUsuarios(); 
+
+        // $this->view->dados = $usuarios;
         $this->render('index','base' );
     }
     
